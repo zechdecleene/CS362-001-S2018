@@ -33,7 +33,7 @@ public class DataHandlerTest{
     Appt newappt1 = new Appt(0, 9, 23, 3, 2018, "smthn", "smthn", "smthn");
     Appt newappt2 = new Appt(16, 20, 23, 3, 2018, "nthn", "nthn", "nthn");
     Appt newappt3 = new Appt(12, 23, 24, 4, 2018, "str", "srt", "asd");
-    Appt newappt4 = new Appt(12, 23, 24, 3, 2018, "str", "srt", "asd");
+    Appt newappt4 = new Appt(1022, 23, 204, 123, 0, "str", "srt", "asd");
     int[] recurdayz;
     recurdayz = new int[20];
     for(int i = 0; i < 20; i++){
@@ -50,11 +50,12 @@ public class DataHandlerTest{
 
           //Create a linked list of calendar days to return
           LinkedList<CalDay> calDays = new LinkedList<CalDay>();
-          dataHandler.saveAppt(newappt3);
+          assertTrue(dataHandler.saveAppt(newappt3));
           dataHandler.saveAppt(newappt2);
-          dataHandler.saveAppt(newappt1);
-          dataHandler.saveAppt(newappt4);
+          assertTrue(dataHandler.saveAppt(newappt1));
+          assertTrue(dataHandler.saveAppt(newappt4));
       calDays = (LinkedList<CalDay>) dataHandler.getApptRange(today,tomorrow);
+      assertNotNull(calDays);
 
       for (int i = 0; i < calDays.size(); i++){
 
@@ -67,11 +68,12 @@ public class DataHandlerTest{
           Appt appt_=appts.get(index);
         }
       }
+      assertTrue(dataHandler.save());
 
-      dataHandler.deleteAppt(newappt2);
-      dataHandler.deleteAppt(newappt1);
-      dataHandler.deleteAppt(newappt3);
-      dataHandler.deleteAppt(newappt4);
+      assertTrue(dataHandler.deleteAppt(newappt2));
+      assertTrue(dataHandler.deleteAppt(newappt1));
+      assertTrue(dataHandler.deleteAppt(newappt3));
+      assertTrue(dataHandler.deleteAppt(newappt4));
   }
 
   @Test(timeout = 4000)
@@ -98,17 +100,22 @@ public class DataHandlerTest{
     newappt3.setRecurrence(null, 2, 0, 0);
     tomorrow.add(today.DAY_OF_MONTH,1);
 
+    // assertNotNull(newappt2.getXmlElement());
+
 
           //Create a linked list of calendar days to return
           LinkedList<CalDay> calDays = new LinkedList<CalDay>();
-          dataHandler.saveAppt(newappt3);
-          dataHandler.saveAppt(newappt2);
-          dataHandler.saveAppt(newappt1);
-          dataHandler.saveAppt(badapt1);
-          dataHandler.deleteAppt(newappt2);
-          dataHandler.deleteAppt(badapt1);
-          dataHandler.deleteAppt(badapt2);
-      // calDays = (LinkedList<CalDay>) dataHandler.getApptRange(tomorrow,today);
+          assertTrue(dataHandler.saveAppt(newappt3));
+          assertTrue(dataHandler.saveAppt(newappt2));
+          assertTrue(dataHandler.saveAppt(newappt1));
+          assertFalse(dataHandler.saveAppt(badapt1));
+          assertTrue(dataHandler.deleteAppt(newappt2));
+          assertFalse(dataHandler.deleteAppt(badapt1));
+          assertFalse(dataHandler.deleteAppt(badapt2));
+
+      calDays = (LinkedList<CalDay>) dataHandler.getApptRange(today,tomorrow);
+
+
 
       for (int i = 0; i < calDays.size(); i++){
 
@@ -119,6 +126,7 @@ public class DataHandlerTest{
         LinkedList<Appt>  appts =calDays.get(i).getAppts();
         for(int index=0; index < appts.size();index++){
           Appt appt_=appts.get(index);
+          assertNotNull(appt_);
         }
       }
 
